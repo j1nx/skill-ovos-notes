@@ -52,6 +52,9 @@ class OVOSNotesSkill(MycroftSkill):
             "ovos.notes.skill.add.note", self.take_personal_note)
         self.gui.register_handler(
             "ovos.notes.skill.release.skill", self.handle_release_skill)
+        self.gui.register_handler(
+            "ovos.notes.skill.change.notes.mode", 
+            self.update_selected_mode_on_page_change)
 
     # generate an incremental note number
     def generate_note_number(self):
@@ -69,27 +72,31 @@ class OVOSNotesSkill(MycroftSkill):
         self.gui['noteNumber'] = note_number
         self.gui.show_page('PersonalNote.qml')
         note = self.get_response('request_note_response', num_retries=1)
+        
+        if note is None:
+            self.speak("Sorry, I didn't hear anything.")
+            
+        else:
+            note_file_name = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '.txt'
+            note_file_path = self.notes_dir + note_file_name
+            with open(note_file_path, 'w') as f:
+                f.write(base64.b64encode(note.encode('utf-8')).decode('utf-8'))
+            self.all_notes_in_db.append({
+                'note_number': note_number,
+                'file_name': note_file_name,
+                'file_path': note_file_path
+            })
+            self.all_notes_db["all_notes"] = self.all_notes_in_db
+            self.all_notes_db.store()
+            self.current_note = note_file_name
 
-        note_file_name = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '.txt'
-        note_file_path = self.notes_dir + note_file_name
-        with open(note_file_path, 'w') as f:
-            f.write(base64.b64encode(note.encode('utf-8')).decode('utf-8'))
-        self.all_notes_in_db.append({
-            'note_number': note_number,
-            'file_name': note_file_name,
-            'file_path': note_file_path
-        })
-        self.all_notes_db["all_notes"] = self.all_notes_in_db
-        self.all_notes_db.store()
-        self.current_note = note_file_name
+            # show the note in the GUI
+            self.gui["personalNoteText"] = note
 
-        # show the note in the GUI
-        self.gui["personalNoteText"] = note
-
-        # speak the note if no gui is available
-        if not self.gui.connected:
-            self.speak_dialog("taken_note_reply")
-            self.handle_read_last_note({})
+            # speak the note if no gui is available
+            if not self.gui.connected:
+                self.speak_dialog("taken_note_reply")
+                self.handle_read_last_note({})
 
     @intent_file_handler('show_all_notes.intent')
     def show_all_notes(self, message):
@@ -256,9 +263,10 @@ class OVOSNotesSkill(MycroftSkill):
         self.current_note = None
         self.current_mode = None
         self.gui["personalNoteText"] = " "
+        self.update_notes_model_on_page_change()
         self.gui.remove_page('PersonalNote.qml')
         self.bus.emit(Message("metadata", {"type": "stop"}))
-
+           
     def handle_reset_all_notes_view(self, message):
         self.gui.remove_page('AllNotes.qml')
         self.current_mode = None
@@ -294,6 +302,31 @@ class OVOSNotesSkill(MycroftSkill):
 
             # Update the all notes view
             self.show_all_notes({})
+            
+    def update_selected_mode_on_page_change(self, message):
+        mode = message.data["mode"]
+        self.current_mode = mode
+        
+    def update_notes_model_on_page_change(self):
+        build_model = []
+        build_model_obj = {}
+        all_note_local_representation = self.all_notes_db["all_notes"]
+        for note in all_note_local_representation:
+            with open(note['file_path'], 'r') as f:
+                note_text = base64.b64decode(f.read()).decode('utf-8')
+            build_model.append({
+                    'note_number': note['note_number'],
+                    'file_name': note['file_name'],
+                    'note_text': note_text
+                })
+
+        sort_on = "note_number"
+        decorated = [(dict_[sort_on], dict_)
+                     for dict_ in build_model]
+        decorated.sort(reverse=True)
+        sorted_model = [dict_ for (key, dict_) in decorated]
+        build_model_obj["allNotes"] = sorted_model
+        self.gui["allNotesModel"] = build_model_obj
 
     def handle_release_skill(self, message):
         self.stop()
