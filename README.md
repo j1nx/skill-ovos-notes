@@ -10,6 +10,7 @@ Use OVOS when your hands are busy and you want to quickly take a note.
 * "Read my last 3 notes"
 * "Read my first 3 notes"
 * "Read my last note"
+* "Read all my notes"
 * "Delete / Remove note (number)"
 
 ## Credits
