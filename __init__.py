@@ -55,6 +55,9 @@ class OVOSNotesSkill(MycroftSkill):
         self.gui.register_handler(
             "ovos.notes.skill.change.notes.mode", 
             self.update_selected_mode_on_page_change)
+        self.gui.register_handler(
+            "ovos.notes.skill.show.all.notes",
+            self.show_all_notes)
 
     # generate an incremental note number
     def generate_note_number(self):
