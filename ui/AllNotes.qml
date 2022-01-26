@@ -31,6 +31,18 @@ Mycroft.CardDelegate {
 
     property var allNotes: sessionData.allNotesModel.allNotes
 
+    onFocusChanged: {
+        if(focus) {
+            triggerGuiEvent("ovos.notes.skill.change.notes.mode", {"mode": 2})
+        }
+    }
+
+    onVisibleChanged: {
+        if(visible) {
+            triggerGuiEvent("ovos.notes.skill.change.notes.mode", {"mode": 2})
+        }
+    }
+
     onAllNotesChanged: {
         console.log(allNotes)
     }

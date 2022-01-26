@@ -29,6 +29,18 @@ Mycroft.CardDelegate {
     cardRadius: 0
     fillWidth: true
 
+    onFocusChanged: {
+        if(focus) {
+            triggerGuiEvent("ovos.notes.skill.change.notes.mode", {"mode": 1})
+        }
+    }
+
+    onVisibleChanged: {
+        if(visible) {
+            triggerGuiEvent("ovos.notes.skill.change.notes.mode", {"mode": 1})
+        }
+    }
+
     Image {
         anchors.fill: parent
         anchors.margins: -Mycroft.Units.gridUnit * 2
