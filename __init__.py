@@ -142,6 +142,7 @@ class OVOSNotesSkill(MycroftSkill):
             self.all_notes_db.store()
 
         self.gui["personalNoteText"] = note
+        self.update_notes_model_on_page_change()
 
     @intent_file_handler('remove_current_note.intent')
     def handle_remove_current_note(self, message):
