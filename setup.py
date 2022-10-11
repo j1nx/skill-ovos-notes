@@ -2,7 +2,7 @@
 from setuptools import setup
 
 URL = "https://github.com/OpenVoiceOS/skill-ovos-notes"
-SKILL_CLAZZ = "OpenVoiceOSSettings"  # needs to match __init__.py class name
+SKILL_CLAZZ = "OVOSNotesSkill"  # needs to match __init__.py class name
 PYPI_NAME = "ovos-skill-notes"  # pip install PYPI_NAME
 
 
