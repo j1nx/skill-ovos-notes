@@ -18,6 +18,8 @@ import datetime
 from mycroft.skills import MycroftSkill, intent_file_handler
 from json_database import JsonStorage
 from mycroft.messagebus.message import Message
+from ovos_utils.process_utils import RuntimeRequirements
+from ovos_utils import classproperty
 
 
 class OVOSNotesSkill(MycroftSkill):
@@ -29,6 +31,19 @@ class OVOSNotesSkill(MycroftSkill):
         self.all_notes_in_db = None
         self.current_note = None
         self.current_mode = None  # "1: personal note" or "2: all notes"
+
+    @classproperty
+    def runtime_requirements(self):
+        # TODO - remove gui requirement once VUI is added
+        return RuntimeRequirements(internet_before_load=False,
+                                   network_before_load=False,
+                                   gui_before_load=True,
+                                   requires_internet=False,
+                                   requires_network=False,
+                                   requires_gui=True,
+                                   no_internet_fallback=True,
+                                   no_network_fallback=True,
+                                   no_gui_fallback=False)
 
     def initialize(self):
         self.notes_dir = self.file_system.path + "/"
