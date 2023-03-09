@@ -15,12 +15,12 @@
  *
  */
 
-import QtQuick 2.15
-import QtQuick.Layouts 1.15
-import QtQuick.Controls 2.15 as Controls
-import org.kde.kirigami 2.19 as Kirigami
+import QtQuick 2.12
+import QtQuick.Layouts 1.4
+import QtQuick.Controls 2.12 as Controls
+import org.kde.kirigami 2.10 as Kirigami
 import Mycroft 1.0 as Mycroft
-import Qt5Compat.GraphicalEffects
+import QtGraphicalEffects 1.0
 
 Controls.ItemDelegate {
     width: notesListView.cellWidth
@@ -76,7 +76,7 @@ Controls.ItemDelegate {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: (mouse)=> {
+                    onClicked: {
                         triggerGuiEvent("ovos.notes.skill.open.selected.note", {"file_name": modelData.file_name})
                     }
                 }
@@ -147,7 +147,7 @@ Controls.ItemDelegate {
 
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: (mouse)=> {
+                        onClicked: {
                             triggerGuiEvent("ovos.notes.skill.open.selected.note", {"file_name": modelData.file_name})
                         }
                     }
@@ -180,7 +180,7 @@ Controls.ItemDelegate {
 
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: (mouse)=> {
+                        onClicked: {
                             triggerGuiEvent("ovos.notes.skill.remove.selected.note", {"file_name": modelData.file_name})
                         }
                     }
