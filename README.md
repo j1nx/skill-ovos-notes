@@ -1,4 +1,9 @@
-# <img src='https://raw.githack.com/FortAwesome/Font-Awesome/master/svgs/solid/sticky-note.svg' card_color='#40DBB0' width='50' height='50' style='vertical-align:bottom'/> Notes
+# <img src='https://raw.githack.com/FortAwesome/Font-Awesome/master/svgs/solid/sticky-note.svg' card_color='#40DBB0' width='50' height='50' style='vertical-align:bottom'/> DEPRECATED - Notes
+
+This skill is no longer maintained by OpenVoiceOS
+
+____________
+
 Take personal notes to keep track of appointments, to-do items, etc.
 
 <img src='samples/notes-1.png' width="480"> <img src='samples/notes-2.png' width="480">
